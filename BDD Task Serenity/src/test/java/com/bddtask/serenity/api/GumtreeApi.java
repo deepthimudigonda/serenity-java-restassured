@@ -10,7 +10,7 @@ public class GumtreeApi {
 	public void sendGetRequest(String item, String size, int topAd, String locationId, String page, int redirected, int responseCode){
 		
 		//Create a Hashmap of query params
-		HashMap<String, String> params = new HashMap<String, String>();
+		HashMap<String, String> params = new HashMap<>();
 			params.put("keyword",item);
 			params.put("size", size);
 			params.put("locationId", locationId);
@@ -20,26 +20,27 @@ public class GumtreeApi {
 		Response response = given()
 							.queryParams(params)
 							.queryParam("includeTopAds", topAd)
-							.queryParam("Redirected", redirected)
+							.queryParam("categoryRedirected", redirected)
+							.queryParam("categoryId",0)
 							.get("https://ecg-api.gumtree.com.au/api/papi/ads/search")
 							.then().statusCode(responseCode).extract().response();
 		
 		//Verify Response Code
 		System.out.println(response.statusCode());
-		Assert.assertTrue(response.statusCode()==responseCode);
+		Assert.assertEquals(response.statusCode(), responseCode);
 		
 		//Verify Response Type
 		Assert.assertTrue(response.contentType().contains("application/json"));
 		
 		//Verify a Header
-		Assert.assertTrue(response.header("Server").equals("rhino-core-shield"));
+		Assert.assertEquals("rhino-core-shield", response.header("Server"));
 		
 		//Verify size of ads
 		if(responseCode==200){
 			List<String> ads = response.jsonPath().getList("ads");
 			int adsNum;
-			adsNum = (topAd==1) ? Integer.valueOf(size)+2 : Integer.valueOf(size);
-			Assert.assertTrue(ads.size()==adsNum);
+			adsNum = (topAd==1) ? Integer.parseInt(size)+2 : Integer.parseInt(size);
+			Assert.assertEquals(ads.size(), adsNum);
 		}
 		
 		//Verify that the first ad is a top ad
