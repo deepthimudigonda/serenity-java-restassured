@@ -26,7 +26,7 @@ Base URL
 To clone the repository
 ------------------------
 Git has to be installed to clone/download the repository.
-From command prompt, run "git clone "
+From command prompt, run "git clone https://github.com/deepthimudigonda/serenity-java-restassured.git"
 
 
 How to run tests
